@@ -42,6 +42,13 @@ endif()
 function(APPLY_STANDARD_SETTINGS TARGET)
   target_compile_features(${TARGET} PUBLIC cxx_std_14)
   target_compile_options(${TARGET} PRIVATE -Wall -Werror)
+  # Clang 23 adds warnings that the C++ bundled inside some plugins
+  # (rive_common ships harfbuzz + rive-cpp) triggers heavily. Keep them
+  # visible but non-fatal, otherwise those plugins cannot be compiled at all.
+  target_compile_options(${TARGET} PRIVATE
+    -Wno-error=nontrivial-memcall
+    -Wno-error=deprecated-builtins
+    -Wno-error=array-bounds)
   target_compile_options(${TARGET} PRIVATE "$<$<NOT:$<CONFIG:Debug>>:-O3>")
   target_compile_definitions(${TARGET} PRIVATE "$<$<NOT:$<CONFIG:Debug>>:NDEBUG>")
 endfunction()

@@ -1,7 +1,8 @@
+import 'package:al_sharif/features/auth/data/auth_service.dart';
+import 'package:al_sharif/features/auth/screens/verify_otp_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -55,45 +56,36 @@ class _SignupState extends State<Signup> {
     setState(() => _loading = true);
 
     try {
-      final res = await Supabase.instance.client.auth.signUp(
+      await AuthService.instance.signUp(
         email: _emailCtrl.text.trim(),
         password: _passCtrl.text,
-        data: {
-          'name': _nameCtrl.text.trim(),
-          'phone': _phoneCtrl.text.trim(),
-          'address': _addressCtrl.text.trim(),
-        },
+        name: _nameCtrl.text.trim(),
+        phone: _phoneCtrl.text.trim(),
+        address: _addressCtrl.text.trim(),
       );
-
-      final user = res.user;
-      if (user == null) throw Exception('signup failed');
 
       if (!mounted) return;
 
-      if (res.session != null) {
+      final user = AuthService.instance.currentUser;
+
+      if (AuthService.instance.currentSession != null) {
         // تأكيد الإيميل مقفول: اليوزر دخل مباشرة
-        await _saveCurrentUserId(user.id);
+        if (user != null) await _saveCurrentUserId(user.id);
+        if (!mounted) return;
         _showMessage('تم إنشاء الحساب بنجاح!'.tr(), color: Colors.teal);
-        Navigator.pushReplacementNamed(context, '/home', arguments: user.id);
+        Navigator.pushReplacementNamed(context, '/home', arguments: user?.id);
       } else {
-        // تأكيد الإيميل مفعّل: لازم يأكد الأول وبعدين يسجل دخول
-        _showMessage(
-          'تم إنشاء الحساب، من فضلك أكد بريدك الإلكتروني ثم سجّل الدخول'.tr(),
-          color: Colors.teal,
+        // تأكيد الإيميل مفعّل: ننتقل لشاشة الكود
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => VerifyOtpScreen(email: _emailCtrl.text.trim()),
+          ),
         );
-        Navigator.pop(context);
-      }
-    } on AuthException catch (e) {
-      if (mounted) {
-        final msg = e.message.toLowerCase().contains('already')
-            ? 'هذا البريد الإلكتروني مسجل بالفعل'.tr()
-            : '${'حدث خطأ أثناء إنشاء الحساب'.tr()}: ${e.message}';
-        _showMessage(msg, color: Colors.red);
       }
     } catch (e) {
       if (mounted) {
-        _showMessage('${'حدث خطأ أثناء حفظ البيانات'.tr()}: $e',
-            color: Colors.red);
+        _showMessage(AuthService.errorKey(e).tr(), color: Colors.red);
       }
     } finally {
       if (mounted) setState(() => _loading = false);

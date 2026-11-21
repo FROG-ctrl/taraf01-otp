@@ -153,6 +153,19 @@
   "لا توجد منتجات حالياً": "لا توجد منتجات حالياً",
   "يبدأ من {} جنيه": "يبدأ من {} جنيه",
   "الوصف": "الوصف",
-  "احسب التكلفة التقديرية": "احسب التكلفة التقديرية"
+  "احسب التكلفة التقديرية": "احسب التكلفة التقديرية",
+  "تأكيد الحساب": "Verify your account",
+  "بعتنالك كود من 6 أرقام على بريدك": "We sent a 6-digit code to your email",
+  "تم تأكيد حسابك بنجاح": "Your account has been verified",
+  "إعادة إرسال الكود": "Resend code",
+  "إعادة إرسال الكود بعد {n} ثانية": "Resend code in {n} seconds",
+  "البريد غلط؟ ارجع تعدله": "Wrong email? Go back and change it",
+  "تأكيد": "Confirm",
+  "من فضلك اكتب الكود كامل": "Please enter the full code",
+  "الكود غير صحيح أو انتهت صلاحيته": "The code is wrong or has expired",
+  "بعت كتير، استنى دقيقة وجرب تاني": "Too many attempts, wait a minute and try again",
+  "إعدادات الإيميل مش مظبوطة، تواصل مع الدعم": "Email settings are misconfigured, contact support",
+  "كلمة المرور ضعيفة، استخدم كلمة أقوى": "Password is too weak, use a stronger one",
+  "تعذر إنشاء الحساب، حاول تاني": "Could not create the account, try again"
 
 }
